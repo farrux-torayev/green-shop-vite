@@ -4,8 +4,10 @@ import { Dialog } from "@headlessui/react";
 import { X } from "lucide-react";
 import LoginForm from "../Login";
 import RegisterForm from "../Register";
+import { useNavigate } from "react-router-dom";
 const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -43,7 +45,17 @@ const AuthModal = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          {isLogin ? <LoginForm /> : <RegisterForm />}
+          {isLogin ? (
+            <LoginForm
+              onClose={onClose}
+              onSuccess={async () => {
+                navigate("/profile");
+                onClose(onClose);
+              }}
+            />
+          ) : (
+            <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+          )}
         </div>
       </Dialog>
     </>

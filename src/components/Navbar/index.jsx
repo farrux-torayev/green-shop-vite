@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,} from "react-router-dom";
 import AuthModal from "../AuthModal";
 
 const Navbar = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Foydalanuvchini localStorage'dan olish
+      setUser(JSON.parse(storedUser));
     }
   }, []);
   return (

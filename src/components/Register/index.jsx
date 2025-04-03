@@ -1,4 +1,5 @@
 import axios from "axios";
+import { User } from "lucide-react";
 import React from "react";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
@@ -40,13 +41,14 @@ const RegisterForm = () => {
         `${api}/user/sign-up?access_token=${token}`,
         formData
       );
-
       setSuccessMessage("Ro‘yxatdan o‘tish muvaffaqiyatli!");
-      setErrorMessage(""); // Oldingi xatolik bo'lsa, uni tozalash
+      setErrorMessage("");
+      const user = res.data;
+      localStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Xatolik yuz berdi!";
       setErrorMessage(errorMsg);
-      setSuccessMessage(""); // Oldingi muvaffaqiyatli xabar bo‘lsa, uni tozalash
+      setSuccessMessage("");
     }
   };
   return (

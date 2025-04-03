@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-const LoginForm = () => {
+const LoginForm = ({ onClose }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isPassword, setIsPassword] = useState(true);
@@ -24,13 +24,16 @@ const LoginForm = () => {
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const savedUser = localStorage.getItem("user");
+    if (savedUser && !user) {
+      navigate("/dashboard");
     }
-  }, []);
+  }, [user, navigate]);
 
   const handleLogin = async () => {
+    setErrorMessage("");
+    setSuccessMessage("");
+
     try {
       const token = "64bebc1e2c6d3f056a8c85b7";
       const api = import.meta.env.VITE_API;
@@ -43,34 +46,32 @@ const LoginForm = () => {
         }
       );
 
-      console.log("API Response:", res.data);
-
       if (res.data && res.data.data && res.data.data.user) {
         const userData = res.data.data.user;
+
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
 
         setSuccessMessage("Muvaffaqiyatli kirdingiz!");
-        setErrorMessage("");
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
         console.log("User saqlandi:", userData);
+        onClose();
+        navigate("/");
       } else {
-        console.error("Foydalanuvchi topilmadi!");
-        setErrorMessage("Foydalanuvchi topilmadi!");
-        setSuccessMessage("");
+        console.error(" Login xatosi: Foydalanuvchi topilmadi!");
+        setErrorMessage("Foydalanuvchi topilmadi! Email yoki parol noto‘g‘ri.");
       }
     } catch (error) {
-      console.error("Login xatosi:", error.response?.data || error.message);
-      setErrorMessage("Login xatosi! Email yoki parol noto‘g‘ri.");
-      setSuccessMessage("");
+      console.error(" Login xatosi:", error.response?.data || error.message);
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Login xatosi! Email yoki parol noto‘g‘ri."
+      );
     }
   };
 
   return (
     <>
-      <div className=" w-[472px] h-[500px] flex flex-col items-center ">
+      <div className=" w-[472px] h-[530px] flex flex-col items-center ">
         <div className="absolute">
           <h3 className="text-sm mr-[100px]  mt-8 font-normal">
             Enter your username and password to login.
@@ -138,7 +139,7 @@ const LoginForm = () => {
             onClick={handleLogin}
             className="w-[377px] hover:bg-green-600 relative top-[40px] bg-green-500 cursor-pointer text-white p-2 rounded"
           >
-            {user ? `Salom, ${user.name}!` : "Login"}
+            {user ? `${user.name}!` : "Login"}
           </button>
         )}
 
