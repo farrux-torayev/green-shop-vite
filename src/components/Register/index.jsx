@@ -33,6 +33,7 @@ const RegisterForm = () => {
   }, [user, navigate]);
 
   const handleRegister = async () => {
+    // Maydonlarning to'ldirilishini tekshirish
     if (
       !formData.name ||
       !formData.surname ||
@@ -42,35 +43,42 @@ const RegisterForm = () => {
       setErrorMessage("Xatolik: Barcha maydonlarni to‘ldiring!");
       return;
     }
-    try {
-      const token = "64bebc1e2c6d3f056a8c85b7";
-      const api = import.meta.env.VITE_API;
 
+    try {
+      const token = "64bebc1e2c6d3f056a8c85b7"; // Tokenni hardcoded qilib qo'yish yomon amaliyot bo'lishi mumkin.
+      const api = import.meta.env.VITE_API; // API manzilingizni .env faylida saqlang
+
+      // API ga so'rov yuborish
       const res = await axios.post(
         `${api}/user/sign-up?access_token=${token}`,
         formData
       );
 
+      // Javobni tekshirish
       if (res.data && res.data.data && res.data.data.user) {
         const userData = res.data.data.user;
 
+        // Foydalanuvchi ma'lumotlarini saqlash
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
 
-        setSuccessMessage("Muvaffaqiyatli kirdingiz!");
-        console.log("User saqlandi:", userData);
-        onClose();
-        navigate("/");
+        setSuccessMessage("Muvaffaqiyatli ro‘yxatdan o‘tdingiz!");
+        console.log("Foydalanuvchi saqlandi:", userData);
+        onClose(); // Modalni yopish
+        navigate("/"); // Asosiy sahifaga yo'naltirish
       } else {
-        console.error(" Login xatosi: Foydalanuvchi topilmadi!");
+        // Xato xabarini chiqarish
+        console.error("Login xatosi: Foydalanuvchi topilmadi!");
         setErrorMessage("Foydalanuvchi topilmadi! Email yoki parol noto‘g‘ri.");
       }
     } catch (error) {
+      // Xatolikni tutish va xabar chiqarish
       const errorMsg = error.response?.data?.message || "Xatolik yuz berdi!";
       setErrorMessage(errorMsg);
-      setSuccessMessage("");
+      setSuccessMessage(""); // Agar xato bo'lsa, muvaffaqiyatli xabarni tozalash
     }
   };
+
   return (
     <div className="flex w-[472px] h-[630px] flex-col items-center">
       <div className="absolute text-center">
