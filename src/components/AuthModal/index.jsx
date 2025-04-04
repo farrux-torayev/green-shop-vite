@@ -54,14 +54,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               }}
             />
           ) : (
-            <RegisterForm
-              onClose={onClose}
-              onSuccess={async () => {
-                onClose(true);
-                navigate("/dashboard");
-              }}
-              onSwitchToLogin={() => setIsLogin(true)}
-            />
+            <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
           )}
         </div>
       </Dialog>

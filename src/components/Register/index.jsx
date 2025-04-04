@@ -1,13 +1,9 @@
 import axios from "axios";
-import { User } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [isPassword, setIsPassword] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -25,60 +21,35 @@ const RegisterForm = () => {
       [e.target.name]: e.target.value,
     });
   };
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser && !user) {
-      navigate("/dashboard");
-    }
-  }, [user, navigate]);
 
   const handleRegister = async () => {
-    // Maydonlarning to'ldirilishini tekshirish
     if (
       !formData.name ||
       !formData.surname ||
       !formData.email ||
-      !formData.password
+      !formData.password ||
+      !formData.confirmed_password
     ) {
       setErrorMessage("Xatolik: Barcha maydonlarni to‘ldiring!");
       return;
     }
-
     try {
-      const token = "64bebc1e2c6d3f056a8c85b7"; // Tokenni hardcoded qilib qo'yish yomon amaliyot bo'lishi mumkin.
-      const api = import.meta.env.VITE_API; // API manzilingizni .env faylida saqlang
+      const token = "64bebc1e2c6d3f056a8c85b7";
+      const api = import.meta.env.VITE_API;
 
-      // API ga so'rov yuborish
       const res = await axios.post(
         `${api}/user/sign-up?access_token=${token}`,
         formData
       );
 
-      // Javobni tekshirish
-      if (res.data && res.data.data && res.data.data.user) {
-        const userData = res.data.data.user;
-
-        // Foydalanuvchi ma'lumotlarini saqlash
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
-
-        setSuccessMessage("Muvaffaqiyatli ro‘yxatdan o‘tdingiz!");
-        console.log("Foydalanuvchi saqlandi:", userData);
-        onClose(); // Modalni yopish
-        navigate("/"); // Asosiy sahifaga yo'naltirish
-      } else {
-        // Xato xabarini chiqarish
-        console.error("Login xatosi: Foydalanuvchi topilmadi!");
-        setErrorMessage("Foydalanuvchi topilmadi! Email yoki parol noto‘g‘ri.");
-      }
+      setSuccessMessage("Ro‘yxatdan o‘tish muvaffaqiyatli!");
+      setErrorMessage(""); 
     } catch (error) {
-      // Xatolikni tutish va xabar chiqarish
       const errorMsg = error.response?.data?.message || "Xatolik yuz berdi!";
       setErrorMessage(errorMsg);
-      setSuccessMessage(""); // Agar xato bo'lsa, muvaffaqiyatli xabarni tozalash
+      setSuccessMessage(""); 
     }
   };
-
   return (
     <div className="flex w-[472px] h-[630px] flex-col items-center">
       <div className="absolute text-center">
@@ -101,7 +72,7 @@ const RegisterForm = () => {
         type="text"
         name="name"
         placeholder="Ismingiz"
-        onClick={handleChange}
+        onChange={handleChange}
         id="name"
         className="pl-[15px] w-[377px] relative top-[50px]  h-[40px] mt-[14px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
@@ -109,7 +80,7 @@ const RegisterForm = () => {
         type="text"
         name="surname"
         placeholder="Familiyangiz"
-        onClick={handleChange}
+        onChange={handleChange}
         id="username"
         className="pl-[15px] w-[377px]  relative top-[50px] h-[40px] mt-[25px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
@@ -117,14 +88,14 @@ const RegisterForm = () => {
         type="email"
         name="email"
         placeholder="Email"
-        onClick={handleChange}
+        onChange={handleChange}
         id="email"
         className="pl-[15px] w-[377px] relative top-[50px]  h-[40px] mt-[25px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
       <input
         type={isPassword ? "password" : "text"}
         name="password"
-        onClick={handleChange}
+        onChange={handleChange}
         placeholder="*********"
         id="password"
         aria-required="true"
@@ -141,7 +112,7 @@ const RegisterForm = () => {
         type={isPassword ? "password" : "text"}
         name="confirmed_password"
         placeholder="Parolni tasdiqlang"
-        onClick={handleChange}
+        onChange={handleChange}
         id="confirm your password"
         className="pl-[15px] w-[377px] relative top-[50px] h-[40px] mt-[25px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
