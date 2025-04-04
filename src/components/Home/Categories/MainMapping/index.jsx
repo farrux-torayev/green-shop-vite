@@ -1,28 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 const api = import.meta.env.VITE_API;
 const fetchFlowers = async ({ queryKey }) => {
-  const [_key, category, type, range_min, range_max] = queryKey;
-  const { data } = await axios.get(`
-  ${api}/flower/category/${category}?type/${type}?&access_token=64bebc1e2c6d3f056a8c85b7&range_min=${range_min}&range_max=${range_max}
-`);
+  const [_key, category, sort, type, range_min, range_max] = queryKey;
+  const { data } = await axios.get(
+    `${api}/flower/category/${category}?&sort=${sort}&type=${type}&access_token=64bebc1e2c6d3f056a8c85b7&range_min=${range_min}&range_max=${range_max}`
+  );
   return data;
 };
 function MainMapping() {
+  const [activeType, setActiveType] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const category = searchParams.get("category") || "house-plants";
+  const sort = searchParams.get("sort") || "default-sorting";
   const type = searchParams.get("type") || "all-plants";
-  const range_min = searchParams.get("range_max") || 0;
+  const range_min = searchParams.get("range_min") || 0;
   const range_max = searchParams.get("range_max") || 1000;
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["flower", category, type, range_min, range_max],
+    queryKey: ["flower", category, sort, type, range_min, range_max],
     queryFn: ({ queryKey }) => fetchFlowers({ queryKey }),
   });
-  const updateType = (sortType) => {
-    searchParams.set("type", sortType);
+  const updateType = (type) => {
+    searchParams.set("type", type);
+    setSearchParams(searchParams);
+    setActiveType(type);
+  };
+  const handleSortChange = (event) => {
+    searchParams.set("sort", event.target.value);
     setSearchParams(searchParams);
   };
   return (
@@ -37,47 +44,46 @@ function MainMapping() {
           >
             <h3
               onClick={() => updateType("all-plants")}
-              className="cursor-pointer font-normal hover:text-[#46A358] transition-colors false"
+              className={`cursor-pointer font-normal hover:text-[#46A358] h-[30px] transition-colors  ${
+                activeType === "all-plants"
+                  ? `text-[#46A358] border-[#46A358] border-b-2`
+                  : ``
+              }`}
             >
               All Plants
             </h3>
             <h3
               onClick={() => updateType("new-arrivals")}
-              className="cursor-pointer font-normal hover:text-[#46A358] transition-colors pb-[3px]"
+              className={`cursor-pointer font-normal hover:text-[#46A358] h-[30px] transition-colors pb-[3px] ${
+                activeType === "new-arrivals"
+                  ? `text-[#46A358] border-[#46A358] border-b-2`
+                  : ``
+              }`}
             >
               New Arrivvals
             </h3>
             <h3
               onClick={() => updateType("sale")}
-              className="cursor-pointer font-normal hover:text-[#46A358] transition-colors false"
+              className={`cursor-pointer font-normal hover:text-[#46A358] h-[30px]  transition-colors ${
+                activeType === "sale"
+                  ? `text-[#46A358] border-[#46A358] border-b-2`
+                  : ``
+              }`}
             >
               Sale
             </h3>
           </div>
-          <div className="flex">
-            <p>Sort by:</p>
-            <span className="" title="Default Sorting">
-              Default Sorting
-            </span>
-            <span className="" unselectable="on" aria-hidden="true">
-              <span
-                role="img"
-                aria-label="down"
-                className="anticon anticon-down ant-select-suffix"
-              >
-                <svg
-                  viewBox="64 64 896 896"
-                  focusable="false"
-                  data-icon="down"
-                  width="1em"
-                  height="1em"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path>
-                </svg>
-              </span>
-            </span>
+          <div className="mb-4">
+            <label className="text-gray-600 font-medium">Sort by:</label>
+            <select
+              className="border rounded-md px-3 py-1 cursor-pointer ml-2"
+              value={sort}
+              onChange={handleSortChange}
+            >
+              <option value="default-sorting">Default Sorting</option>
+              <option value="the-cheapest">The-Cheapest</option>
+              <option value="expensive">Most Expensive</option>
+            </select>
           </div>
         </div>
         <div className=" grid grid-cols-3 gap-4  my-[30px]">
@@ -85,7 +91,7 @@ function MainMapping() {
             ({ title, price, discount_price, main_image, _id }, index) => {
               return (
                 <div key={index}>
-                  <Link to={`/dashboard/cardmain/card/${_id}`}>
+                  <Link to={`/dashboard/card/${_id}`}>
                     <div className="max-sm:grid-cols-2">
                       <div className="">
                         <div className="group h-[300px] bg-[#f5f5f5] flex justify-center items-center relative">

@@ -211,7 +211,7 @@ const Dashboard = () => {
                     className="border w-[272px] h-[40px] py-[7px] px-[11px]"
                     type="text"
                     value={user?.name || ""}
-                    onChange={handleChange}
+                    onClick={handleChange}
                     name="name"
                   />
                 </div>
@@ -231,7 +231,7 @@ const Dashboard = () => {
                     className="border w-[272px] h-[40px] py-[7px] px-[11px]"
                     type="text"
                     value={user?.surname || ""}
-                    onChange={handleChange}
+                    onClick={handleChange}
                     name="surname"
                   />
                 </div>
@@ -255,7 +255,7 @@ const Dashboard = () => {
                     className="border w-[272px] h-[40px] py-[7px] px-[11px]"
                     type="text"
                     value={user?.email || ""}
-                    onChange={handleChange}
+                    onClick={handleChange}
                     name="email"
                   />
                 </div>
@@ -283,7 +283,7 @@ const Dashboard = () => {
                         className="border-t border-b border-r w-[212px] h-[40px] py-[7px] px-[11px] rounded-r"
                         type="text"
                         value={user?.phone_number || ""}
-                        onChange={handleChange}
+                        onClick={handleChange}
                         name="phone_number"
                       />
                     </span>
@@ -306,7 +306,7 @@ const Dashboard = () => {
                     className="border rounded w-[272px] h-[40px] py-[7px] px-[11px]"
                     type="text"
                     value={user?.username || ""}
-                    onChange={handleChange}
+                    onClick={handleChange}
                     name="username"
                   />
                 </div>
@@ -344,7 +344,7 @@ const Dashboard = () => {
                     <input
                       id="file-upload"
                       type="file"
-                      onChange={handleFileChange}
+                      onClick={handleFileChange}
                       name="profile_photo"
                     />
                   </button>

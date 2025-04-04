@@ -8,7 +8,7 @@ import Dashboard from "./Dashboard";
 import { useEffect, useState } from "react";
 import LoginForm from "./components/Login";
 import MyProducts from "./Dashboard/myproducts";
-import Card from "./Dashboard/cardmain/card";
+import Card from "./Dashboard/Card";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -29,7 +29,7 @@ function App() {
           element={user ? <Dashboard /> : <Navigate to="/login" />}
         />
         <Route path="/dashboard/myproducts" element={<MyProducts />} />
-        <Route path="/dashboard/cardmain/card/:id" element={<Card />} />
+        <Route path="/dashboard/card/:id" element={<Card />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

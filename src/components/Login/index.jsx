@@ -93,7 +93,7 @@ const LoginForm = ({ onClose }) => {
           type="email"
           id="email"
           aria-required="true"
-          onChange={handleChange}
+          onClick={handleChange}
           className="pl-[15px] w-[377px] h-[40px] relative top-[50px] mt-[14px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
         />
         <input
@@ -102,7 +102,7 @@ const LoginForm = ({ onClose }) => {
           type={isPassword ? "password" : "text"}
           id="password"
           aria-required="true"
-          onChange={handleChange}
+          onClick={handleChange}
           className="pl-[15px] w-[377px] mt-[50px] relative top-[50px] h-[40px]  border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
         />
         <button

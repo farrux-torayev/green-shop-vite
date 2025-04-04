@@ -25,9 +25,8 @@ const CategoriesMain = () => {
     queryKey: ["users"],
     queryFn: fetchUsers,
   });
-  const updateSort = (sortType) => {
+  const updateType = (sortType) => {
     searchParams.set("category", sortType);
-    searchParams.set("type", sortType);
     setSearchParams(searchParams);
   };
   const updateRange = (min, max) => {
@@ -46,7 +45,7 @@ const CategoriesMain = () => {
         {data?.data.map(({ title, count, route_path }, index) => {
           return (
             <div
-              onClick={() => updateSort(route_path)}
+              onClick={() => updateType(route_path)}
               key={index}
               className={`flex justify-between text-base font-normal cursor-pointer hover:text-[#46A358] transition-colors ${
                 category === route_path && "text-green-600"

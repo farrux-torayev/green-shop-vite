@@ -1,10 +1,13 @@
 import axios from "axios";
 import { User } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [isPassword, setIsPassword] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +25,12 @@ const RegisterForm = () => {
       [e.target.name]: e.target.value,
     });
   };
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser && !user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleRegister = async () => {
     if (
@@ -41,10 +50,21 @@ const RegisterForm = () => {
         `${api}/user/sign-up?access_token=${token}`,
         formData
       );
-      setSuccessMessage("Ro‘yxatdan o‘tish muvaffaqiyatli!");
-      setErrorMessage("");
-      const user = res.data;
-      localStorage.setItem("user", JSON.stringify(user));
+
+      if (res.data && res.data.data && res.data.data.user) {
+        const userData = res.data.data.user;
+
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        setSuccessMessage("Muvaffaqiyatli kirdingiz!");
+        console.log("User saqlandi:", userData);
+        onClose();
+        navigate("/");
+      } else {
+        console.error(" Login xatosi: Foydalanuvchi topilmadi!");
+        setErrorMessage("Foydalanuvchi topilmadi! Email yoki parol noto‘g‘ri.");
+      }
     } catch (error) {
       const errorMsg = error.response?.data?.message || "Xatolik yuz berdi!";
       setErrorMessage(errorMsg);
@@ -73,7 +93,7 @@ const RegisterForm = () => {
         type="text"
         name="name"
         placeholder="Ismingiz"
-        onChange={handleChange}
+        onClick={handleChange}
         id="name"
         className="pl-[15px] w-[377px] relative top-[50px]  h-[40px] mt-[14px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
@@ -81,7 +101,7 @@ const RegisterForm = () => {
         type="text"
         name="surname"
         placeholder="Familiyangiz"
-        onChange={handleChange}
+        onClick={handleChange}
         id="username"
         className="pl-[15px] w-[377px]  relative top-[50px] h-[40px] mt-[25px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
@@ -89,14 +109,14 @@ const RegisterForm = () => {
         type="email"
         name="email"
         placeholder="Email"
-        onChange={handleChange}
+        onClick={handleChange}
         id="email"
         className="pl-[15px] w-[377px] relative top-[50px]  h-[40px] mt-[25px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
       <input
         type={isPassword ? "password" : "text"}
         name="password"
-        onChange={handleChange}
+        onClick={handleChange}
         placeholder="*********"
         id="password"
         aria-required="true"
@@ -113,7 +133,7 @@ const RegisterForm = () => {
         type={isPassword ? "password" : "text"}
         name="confirmed_password"
         placeholder="Parolni tasdiqlang"
-        onChange={handleChange}
+        onClick={handleChange}
         id="confirm your password"
         className="pl-[15px] w-[377px] relative top-[50px] h-[40px] mt-[25px] border rounded-[10px] border-[#46A358] hover:outline-[#3b82f680]"
       />
