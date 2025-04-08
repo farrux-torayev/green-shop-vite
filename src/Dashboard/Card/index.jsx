@@ -241,9 +241,7 @@ const Card = () => {
                           <tr className="ant-descriptions-row">
                             <td className="text-start">
                               <div className="ant-descriptions-item-container">
-                                <span className="text-start">
-                                Categories
-                                </span>
+                                <span className="text-start">Categories</span>
                                 <span className="ant-descriptions-item-content">
                                   {dataId?.category}
                                 </span>

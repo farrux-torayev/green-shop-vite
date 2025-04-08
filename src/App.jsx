@@ -9,6 +9,11 @@ import { useEffect, useState } from "react";
 import LoginForm from "./components/Login";
 import MyProducts from "./Dashboard/myproducts";
 import Card from "./Dashboard/Card";
+import RegisterForm from "./components/Register";
+import TrackOrder from "./Dashboard/Track Order";
+import Address from "./Dashboard/Address";
+import Wishlist from "./Dashboard/Wishlist";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -23,16 +28,27 @@ function App() {
       <Navbar />
       <Routes>
         <Route element={<Home />} path="/" />
-        <Route path="/login" element={<LoginForm setUser={setUser} />} />
+        <Route
+          path="/login"
+          element={<LoginForm user={user} setUser={setUser} />}
+        />
+        <Route
+          path="/register"
+          element={<RegisterForm user={user} setUser={setUser} />}
+        />
         <Route
           path="/dashboard"
           element={user ? <Dashboard /> : <Navigate to="/login" />}
         />
-        <Route path="/dashboard/myproducts" element={<MyProducts />} />
+        <Route path="/dashboard/myProducts" element={<MyProducts />} />
+        <Route path="/dashboard/trackOrder" element={<TrackOrder />} />
+        <Route path="/dashboard/address" element={<Address />} />
+        <Route path="/dashboard/wishlist" element={<Wishlist />} />
         <Route path="/dashboard/card/:id" element={<Card />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
+      <ToastContainer />
     </>
   );
 }

@@ -13,8 +13,7 @@ const fetchCategories = async () => {
 
 const Discount = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["categories"],
-    queryKey: ["type"],
+    queryKey: ["categories", "type"],
     queryFn: fetchCategories,
   });
 

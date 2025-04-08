@@ -54,7 +54,10 @@ const AuthModal = ({ isOpen, onClose }) => {
               }}
             />
           ) : (
-            <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+            <RegisterForm
+              onClose={onClose}
+              onSwitchToLogin={() => setIsLogin(true)}
+            />
           )}
         </div>
       </Dialog>

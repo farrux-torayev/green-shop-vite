@@ -2,8 +2,10 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const RegisterForm = () => {
+const RegisterForm = ({ setUser, onClose }) => {
   const [isPassword, setIsPassword] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -15,6 +17,7 @@ const RegisterForm = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -23,31 +26,44 @@ const RegisterForm = () => {
   };
 
   const handleRegister = async () => {
-    if (
-      !formData.name ||
-      !formData.surname ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmed_password
-    ) {
-      setErrorMessage("Xatolik: Barcha maydonlarni to‘ldiring!");
-      return;
-    }
+    setErrorMessage("");
+    setSuccessMessage("");
+
     try {
       const token = "64bebc1e2c6d3f056a8c85b7";
       const api = import.meta.env.VITE_API;
 
       const res = await axios.post(
         `${api}/user/sign-up?access_token=${token}`,
-        formData
+        {
+          name: formData.name.trim(),
+          surname: formData.surname.trim(),
+          email: formData.email.trim(),
+          password: formData.password.trim(),
+          confirmed_password: formData.confirmed_password.trim(),
+        }
       );
 
-      setSuccessMessage("Ro‘yxatdan o‘tish muvaffaqiyatli!");
-      setErrorMessage(""); 
+      if (res.data && res.data.data && res.data.data.user) {
+        const userData = res.data.data.user;
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        setUser(userData);
+        setSuccessMessage("Muvaffaqiyatli ro‘yxatdan o‘tdingiz!");
+        navigate("/");
+        onClose();
+      } else {
+        setErrorMessage("Ro‘yxatdan o‘tishda xatolik yuz berdi.");
+      }
     } catch (error) {
-      const errorMsg = error.response?.data?.message || "Xatolik yuz berdi!";
-      setErrorMessage(errorMsg);
-      setSuccessMessage(""); 
+      console.error(
+        "Ro‘yxatdan o‘tishda xatolik:",
+        error.response?.data || error.message
+      );
+      setErrorMessage(
+        error.response?.data?.message || "Ro‘yxatdan o‘tishda xatolik!"
+      );
     }
   };
   return (

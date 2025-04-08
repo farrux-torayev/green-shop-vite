@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { signInWithGoogle } from "../../../firebase";
+import { toast } from "react-toastify";
 
-const LoginForm = ({ onClose }) => {
+const LoginForm = ({ user, onClose, setUser }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [isPassword, setIsPassword] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -25,10 +26,10 @@ const LoginForm = ({ onClose }) => {
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    if (savedUser && !user) {
+    if (savedUser) {
       navigate("/dashboard");
     }
-  }, [user, navigate]);
+  }, [navigate, setUser]);
 
   const handleLogin = async () => {
     setErrorMessage("");
@@ -66,6 +67,57 @@ const LoginForm = ({ onClose }) => {
         error.response?.data?.message ||
           "Login xatosi! Email yoki parol noto‘g‘ri."
       );
+    }
+  };
+
+  const signGoogle = async () => {
+    try {
+      const api = import.meta.env.VITE_API;
+      const token = "64bebc1e2c6d3f056a8c85b7";
+
+      const result = await signInWithGoogle();
+
+      const response = await axios.post(
+        `${api}/user/sign-in/google?access_token=${token}`,
+        {
+          email: result.user.email,
+        }
+      );
+
+      const userData = response?.data?.data?.user;
+      const accessToken = response?.data?.data?.token;
+
+      if (userData && accessToken) {
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("token", accessToken);
+
+        toast.success(`Xush kelibsiz, ${userData.name}!`, {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "light",
+        });
+
+        console.log("Ma'lumotlar lokalga saqlandi!");
+      } else {
+        toast.error(
+          "Tizimga kirishda xatolik yuz berdi. Iltimos qayta urinib ko'ring.",
+          {
+            position: "top-right",
+            autoClose: 4000,
+            theme: "colored",
+          }
+        );
+
+        console.log("User yoki token topilmadi");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+
+      toast.error("Google orqali kirishda xatolik yuz berdi!", {
+        position: "top-right",
+        autoClose: 4000,
+        theme: "colored",
+      });
     }
   };
 
@@ -169,7 +221,10 @@ const LoginForm = ({ onClose }) => {
             </span>
             Login with Facebook
           </button>
-          <button className="cursor-pointer flex items-center gap-2 border border-[#EAEAEA] h-[40px] w-full rounded-md">
+          <button
+            onClick={signGoogle}
+            className="cursor-pointer flex items-center gap-2 border border-[#EAEAEA] h-[40px] w-full rounded-md"
+          >
             <span
               role="img"
               aria-label="google"

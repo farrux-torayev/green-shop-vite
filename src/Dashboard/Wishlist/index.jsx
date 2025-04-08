@@ -1,37 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { data, Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
-const api = import.meta.env.VITE_API;
-const fetchCategories = async () => {
-  const { data } = await axios.get(`
-    ${api}/user/account-details?access_token=67e51c1d2802b2864782f773`);
-  return data;
-};
-
-const MyProducts = () => {
-  const [activeSection, setActiveSection] = useState("myProducts");
+const Wishlist = () => {
+  const [activeSection, setActiveSection] = useState("wishlist");
   const handleClick = (section) => {
     setActiveSection(section);
   };
-
-  const handleAddNew = () => {
-    toast("Sizning akkauntingiz administratorlar tomonidan tasdiqlanmagan!", {
-      icon: "⚠️",
-      style: {
-        background: "#ffffff",
-        color: "#333333",
-        border: "1px solid #007BFF",
-      },
-      progressStyle: {
-        background: "#007BFF",
-      },
-      autoClose: false,
-    });
-  };
-
   return (
     <>
       <div className="max-sm:mx-[10px]">
@@ -42,11 +16,11 @@ const MyProducts = () => {
               <div
                 onClick={() => handleClick("accountDetails")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                      ${
-                        activeSection === "accountDetails"
-                          ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                          : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                      }`}
+                          ${
+                            activeSection === "accountDetails"
+                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                          }`}
               >
                 <span
                   role="img"
@@ -72,11 +46,11 @@ const MyProducts = () => {
               <div
                 onClick={() => handleClick("myProducts")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                      ${
-                        activeSection === "myProducts"
-                          ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                          : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                      }`}
+                          ${
+                            activeSection === "myProducts"
+                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                          }`}
               >
                 <span
                   role="img"
@@ -102,11 +76,11 @@ const MyProducts = () => {
               <div
                 onClick={() => handleClick("address")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                      ${
-                        activeSection === "address"
-                          ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                          : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                      }`}
+                          ${
+                            activeSection === "address"
+                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                          }`}
               >
                 <span
                   role="img"
@@ -132,11 +106,11 @@ const MyProducts = () => {
               <div
                 onClick={() => handleClick("wishlist")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                      ${
-                        activeSection === "wishlist"
-                          ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                          : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                      }`}
+                          ${
+                            activeSection === "wishlist"
+                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                          }`}
               >
                 {" "}
                 <span
@@ -161,13 +135,13 @@ const MyProducts = () => {
                 </h3>
               </div>
               <div
-                onClick={() => handleClick("trackOrder")}
+                onClick={() => handleClick("track order")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                      ${
-                        activeSection === "track order"
-                          ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                          : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                      }`}
+                          ${
+                            activeSection === "track order"
+                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                          }`}
               >
                 <span
                   role="img"
@@ -193,19 +167,6 @@ const MyProducts = () => {
             </div>
           </div>
           <div className="w-full h-[417px]">
-            <button
-              onClick={handleAddNew}
-              className="bg-[#46A358] flex rounded-md items-center justify-center gap-1 text-base text-white ml-auto px-[15px] py-[8px]"
-            >
-              Add new
-            </button>
-            <ToastContainer />
-
-            <div className="pb-[11px] border-b border-[#46A35880] text-start flex max-lg:hidden">
-              <h3 className="w-[40%]">Products</h3>
-              <h3 className="w-[20%]">Price</h3>
-              <h3 className="w-[40%]">Total</h3>
-            </div>
             <div className="flex flex-col gap-3">
               <div className="mt-[10px]">
                 <div className="ml-[370px]">
@@ -275,4 +236,4 @@ const MyProducts = () => {
   );
 };
 
-export default MyProducts;
+export default Wishlist;
