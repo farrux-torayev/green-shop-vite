@@ -34,7 +34,7 @@ function MainMapping() {
   };
   return (
     <>
-      <div className="border w-[970px] mt-[30px] pl-[30px]">
+      <div className="w-[970px] mt-[30px] pl-[30px]">
         <div className="flex justify-between ">
           <div
             className={` gap-8 p-[5px] max-sm:gap-4 flex text-base font-normal cursor-pointer  transition-colors 

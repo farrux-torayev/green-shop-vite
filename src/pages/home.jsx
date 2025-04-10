@@ -3,7 +3,7 @@ import HomeComponent from "../components/Home";
 
 const Home = () => {
   return (
-    <div className="border">
+    <div>
       <HomeComponent />
     </div>
   );

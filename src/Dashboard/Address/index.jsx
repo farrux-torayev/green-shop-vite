@@ -1,26 +1,82 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
+const api = import.meta.env.VITE_API;
 const Address = () => {
   const [activeSection, setActiveSection] = useState("address");
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    surname: "",
+    country: "",
+    town: "",
+    street_address: "",
+    state: "",
+    zip: "",
+    email: "",
+    phone_number: "",
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+  const handleChange = (e) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const fetchUsers = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      console.log("Foydalanuvchi ma'lumotlari hali mavjud emas.");
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${api}/user/address?access_token=67e51c1d2802b2864782f773`,
+        user,
+        {
+          headers: { Authorization: `Bearer 67e51c1d2802b2864782f773` },
+        }
+      );
+      console.log("Foydalanuvchi ma'lumotlari:", data);
+    } catch (error) {
+      console.error("Xato:", error);
+    }
+  };
   const handleClick = (section) => {
     setActiveSection(section);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+  };
+
   return (
     <div>
       <div className="max-sm:mx-[10px]">
         <div className="flex my-[62px] gap-[30px]">
           <div className="bg-[#FBFBFB] w-[310px] h-fit text-xl p-[15px] max-sm:hidden">
             <h1 className="font-bold text-start">My Account</h1>
+
             <div className="flex flex-col gap-3 mt-[15px] border-b border-[#46A35880] pb-[35px]">
               <div
                 onClick={() => handleClick("accountDetails")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                ${
-                  activeSection === "accountDetails"
-                    ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                    : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                }`}
+                                     ${
+                                       activeSection === "accountDetails"
+                                         ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                         : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                     }`}
               >
                 <span
                   role="img"
@@ -39,16 +95,18 @@ const Address = () => {
                     <path d="M858.5 763.6a374 374 0 00-80.6-119.5 375.63 375.63 0 00-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6a375.63 375.63 0 00-80.6 119.5A371.7 371.7 0 00136 901.8a8 8 0 008 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 008-8.2c-1-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z"></path>
                   </svg>
                 </span>
-                <h3 className="font-normal text-base">Account Details</h3>
+                <h3 className="font-normal text-base">
+                  <Link to="/dashboard">Account Details</Link>
+                </h3>
               </div>
               <div
                 onClick={() => handleClick("myProducts")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                ${
-                  activeSection === "myProducts"
-                    ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                    : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                }`}
+                                     ${
+                                       activeSection === "myProducts"
+                                         ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                         : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                     }`}
               >
                 <span
                   role="img"
@@ -74,11 +132,11 @@ const Address = () => {
               <div
                 onClick={() => handleClick("address")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                ${
-                  activeSection === "address"
-                    ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                    : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                }`}
+                                     ${
+                                       activeSection === "address"
+                                         ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                         : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                     }`}
               >
                 <span
                   role="img"
@@ -104,11 +162,11 @@ const Address = () => {
               <div
                 onClick={() => handleClick("wishlist")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                ${
-                  activeSection === "wishlist"
-                    ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                    : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                }`}
+                                     ${
+                                       activeSection === "wishlist"
+                                         ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                         : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                     }`}
               >
                 {" "}
                 <span
@@ -133,13 +191,13 @@ const Address = () => {
                 </h3>
               </div>
               <div
-                onClick={() => handleClick("track order")}
+                onClick={() => handleClick("trackOrder")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                ${
-                  activeSection === "track order"
-                    ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                    : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                }`}
+                                     ${
+                                       activeSection === "track order"
+                                         ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                         : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                     }`}
               >
                 <span
                   role="img"
@@ -163,69 +221,723 @@ const Address = () => {
                 </h3>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="w-full h-[417px]">
-        <div className="flex flex-col gap-3">
-          <div className="mt-[10px]">
-            <div className="ml-[370px]">
-              <svg
-                width="184"
-                height="110"
-                viewBox="0 0 184 152"
-                xmlns="http://www.w3.org/2000/svg"
+            <div className="flex items-center  gap-3 cursor-pointer pl-[5px] w-full h-[40px] mt-[20px] hover:text-white text-base text-red-400 hover:bg-red-600">
+              <span
+                role="img"
+                aria-label="logout"
+                className="anticon anticon-logout w-[20px]  h-[20px]"
               >
-                <g fill="none" fillRule="evenodd">
-                  <g transform="translate(24 31.67)">
-                    <ellipse
-                      fillOpacity=".8"
-                      fill="#F5F5F7"
-                      cx="67.797"
-                      cy="106.89"
-                      rx="67.797"
-                      ry="12.668"
-                    ></ellipse>
-                    <path
-                      d="M122.034 69.674L98.109 40.229c-1.148-1.386-2.826-2.225-4.593-2.225h-51.44c-1.766 0-3.444.839-4.592 2.225L13.56 69.674v15.383h108.475V69.674z"
-                      fill="#AEB8C2"
-                    ></path>
-                    <path
-                      d="M101.537 86.214L80.63 61.102c-1.001-1.207-2.507-1.867-4.048-1.867H31.724c-1.54 0-3.047.66-4.048 1.867L6.769 86.214v13.792h94.768V86.214z"
-                      fill="url(#linearGradient-1)"
-                      transform="translate(13.56)"
-                    ></path>
-                    <path
-                      d="M33.83 0h67.933a4 4 0 0 1 4 4v93.344a4 4 0 0 1-4 4H33.83a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z"
-                      fill="#F5F5F7"
-                    ></path>
-                    <path
-                      d="M42.678 9.953h50.237a2 2 0 0 1 2 2V36.91a2 2 0 0 1-2 2H42.678a2 2 0 0 1-2-2V11.953a2 2 0 0 1 2-2zM42.94 49.767h49.713a2.262 2.262 0 1 1 0 4.524H42.94a2.262 2.262 0 0 1 0-4.524zM42.94 61.53h49.713a2.262 2.262 0 1 1 0 4.525H42.94a2.262 2.262 0 0 1 0-4.525zM121.813 105.032c-.775 3.071-3.497 5.36-6.735 5.36H20.515c-3.238 0-5.96-2.29-6.734-5.36a7.309 7.309 0 0 1-.222-1.79V69.675h26.318c2.907 0 5.25 2.448 5.25 5.42v.04c0 2.971 2.37 5.37 5.277 5.37h34.785c2.907 0 5.277-2.421 5.277-5.393V75.1c0-2.972 2.343-5.426 5.25-5.426h26.318v33.569c0 .617-.077 1.216-.221 1.789z"
-                      fill="#DCE0E6"
-                    ></path>
-                  </g>
-                  <path
-                    d="M149.121 33.292l-6.83 2.65a1 1 0 0 1-1.317-1.23l1.937-6.207c-2.589-2.944-4.109-6.534-4.109-10.408C138.802 8.102 148.92 0 161.402 0 173.881 0 184 8.102 184 18.097c0 9.995-10.118 18.097-22.599 18.097-4.528 0-8.744-1.066-12.28-2.902z"
-                    fill="#DCE0E6"
-                  ></path>
-                  <g transform="translate(149.65 15.383)" fill="#FFF">
-                    <ellipse
-                      cx="20.654"
-                      cy="3.167"
-                      rx="2.849"
-                      ry="2.815"
-                    ></ellipse>
-                    <path d="M5.698 5.63H0L2.898.704zM9.259.704h4.985V5.63H9.259z"></path>
-                  </g>
-                </g>
-              </svg>
+                <svg
+                  viewBox="64 64 896 896"
+                  focusable="false"
+                  data-icon="logout"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M868 732h-70.3c-4.8 0-9.3 2.1-12.3 5.8-7 8.5-14.5 16.7-22.4 24.5a353.84 353.84 0 01-112.7 75.9A352.8 352.8 0 01512.4 866c-47.9 0-94.3-9.4-137.9-27.8a353.84 353.84 0 01-112.7-75.9 353.28 353.28 0 01-76-112.5C167.3 606.2 158 559.9 158 512s9.4-94.2 27.8-137.8c17.8-42.1 43.4-80 76-112.5s70.5-58.1 112.7-75.9c43.6-18.4 90-27.8 137.9-27.8 47.9 0 94.3 9.3 137.9 27.8 42.2 17.8 80.1 43.4 112.7 75.9 7.9 7.9 15.3 16.1 22.4 24.5 3 3.7 7.6 5.8 12.3 5.8H868c6.3 0 10.2-7 6.7-12.3C798 160.5 663.8 81.6 511.3 82 271.7 82.6 79.6 277.1 82 516.4 84.4 751.9 276.2 942 512.4 942c152.1 0 285.7-78.8 362.3-197.7 3.4-5.3-.4-12.3-6.7-12.3zm88.9-226.3L815 393.7c-5.3-4.2-13-.4-13 6.3v76H488c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h314v76c0 6.7 7.8 10.5 13 6.3l141.9-112a8 8 0 000-12.6z"></path>
+                </svg>
+              </span>
+
+              <button
+                onClick={handleLogout}
+                className=" hover:bg-red-600  cursor-pointer p-2 rounded"
+              >
+                Logout
+              </button>
             </div>
-            <div className="">
+          </div>
+
+          {/* <div className="w-full">
+            <div className="flex justify-between mb-[30px]">
               <div>
-                <h3 className="text-[20px] font-[500]">No products yet...</h3>
+                <h3 className="mb-[10px]">Billing Address</h3>
+                <p className="font-light">
+                  The following addresses will be used on the checkout page by
+                  default.
+                </p>
+              </div>
+              <p className="font-bold text-[#46A358] cursor-pointer">Add</p>
+            </div>
+            <form
+              id="complex-form"
+              className="ant-form ant-form-vertical ant-form-large css-k7429z w-full"
+            >
+              <div
+                className="ant-form-item css-k7429z"
+                style="margin-bottom: 0px;"
+              >
+                <div className="ant-row ant-form-item-row css-k7429z">
+                  <div className="ant-col ant-col-26 ant-form-item-control css-k7429z">
+                    <div className="ant-form-item-control-input">
+                      <div className="ant-form-item-control-input-content">
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px);"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_name"
+                                className="ant-form-item-required"
+                                title="First name"
+                              >
+                                First name
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Type your first name..."
+                                    id="complex-form_name"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value="farrux"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px); margin: 0px 8px;"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_surname"
+                                className="ant-form-item-required"
+                                title="Last name"
+                              >
+                                Last name
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Type your last name..."
+                                    id="complex-form_surname"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value="farrux"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="ant-form-item css-k7429z"
+                style="margin-bottom: 0px;"
+              >
+                <div className="ant-row ant-form-item-row css-k7429z">
+                  <div className="ant-col ant-col-26 ant-form-item-control css-k7429z">
+                    <div className="ant-form-item-control-input">
+                      <div className="ant-form-item-control-input-content">
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px);"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_country"
+                                className="ant-form-item-required"
+                                title="Country / Region"
+                              >
+                                Country / Region
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Select your country..."
+                                    id="complex-form_country"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px); margin: 0px 8px;"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_town"
+                                className="ant-form-item-required"
+                                title="Town / City"
+                              >
+                                Town / City
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Select your town..."
+                                    id="complex-form_town"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="ant-form-item css-k7429z"
+                style="margin-bottom: 0px;"
+              >
+                <div className="ant-row ant-form-item-row css-k7429z">
+                  <div className="ant-col ant-col-26 ant-form-item-control css-k7429z">
+                    <div className="ant-form-item-control-input">
+                      <div className="ant-form-item-control-input-content">
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px);"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_street_address"
+                                className="ant-form-item-required"
+                                title="Streed Address"
+                              >
+                                Streed Address
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="House number and street name"
+                                    id="complex-form_street_address"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px); margin: 0px 8px;"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_extra_address"
+                                className=""
+                                title="Extra address"
+                              >
+                                Extra address
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Appartment, suite, unit, etc. (optional)"
+                                    id="complex-form_extra_address"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="ant-form-item css-k7429z"
+                style="margin-bottom: 0px;"
+              >
+                <div className="ant-row ant-form-item-row css-k7429z">
+                  <div className="ant-col ant-col-26 ant-form-item-control css-k7429z">
+                    <div className="ant-form-item-control-input">
+                      <div className="ant-form-item-control-input-content">
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px);"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_state"
+                                className="ant-form-item-required"
+                                title="State"
+                              >
+                                State
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Select a state..."
+                                    id="complex-form_state"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px); margin: 0px 8px;"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_zip"
+                                className="ant-form-item-required"
+                                title="Zip"
+                              >
+                                Zip
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Appartment, suite, unit, etc. (optional)"
+                                    id="complex-form_zip"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="ant-form-item css-k7429z"
+                style="margin-bottom: 0px;"
+              >
+                <div className="ant-row ant-form-item-row css-k7429z">
+                  <div className="ant-col ant-col-26 ant-form-item-control css-k7429z">
+                    <div className="ant-form-item-control-input">
+                      <div className="ant-form-item-control-input-content">
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px);"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_email"
+                                className="ant-form-item-required"
+                                title="Email address"
+                              >
+                                Email address
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <input
+                                    placeholder="Type your email..."
+                                    id="complex-form_email"
+                                    aria-required="true"
+                                    className="ant-input ant-input-lg css-k7429z"
+                                    type="text"
+                                    value="farruxtorayev590@gmail.com"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="ant-form-item css-k7429z"
+                          style="display: inline-block; width: calc(50% - 8px); margin: 0px 8px;"
+                        >
+                          <div className="ant-row ant-form-item-row css-k7429z">
+                            <div className="ant-col ant-form-item-label css-k7429z">
+                              <label
+                                htmlFor="complex-form_phone_number"
+                                className="ant-form-item-required"
+                                title="Phone Number"
+                              >
+                                Phone Number
+                              </label>
+                            </div>
+                            <div className="ant-col ant-form-item-control css-k7429z">
+                              <div className="ant-form-item-control-input">
+                                <div className="ant-form-item-control-input-content">
+                                  <span className="ant-input-group-wrapper ant-input-group-wrapper-lg css-k7429z">
+                                    <span className="ant-input-wrapper ant-input-group css-k7429z">
+                                      <span className="ant-input-group-addon">
+                                        +998
+                                      </span>
+                                      <input
+                                        placeholder="Type your phone number..."
+                                        id="complex-form_phone_number"
+                                        aria-required="true"
+                                        className="ant-input ant-input-lg css-k7429z"
+                                        type="text"
+                                        value="undefined"
+                                      />
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button className="bg-[#46A358] flex rounded-md items-center justify-center gap-1 text-base text-white h-[40px] px-[10px]">
+                Save Address
+              </button>
+            </form>
+            <div className="flex justify-between mt-[30px]">
+              <div>
+                <h3 className="mb-[10px]">Shipping Address</h3>
+                <p className="font-light">
+                  You have not set up this type of address yet.
+                </p>
+              </div>
+              <div>
+                <label className="ant-checkbox-wrapper mb-[10px] css-k7429z">
+                  <span className="ant-checkbox css-k7429z">
+                    <input className="ant-checkbox-input" type="checkbox" />
+                    <span className="ant-checkbox-inner"></span>
+                  </span>
+                  <span>Same as billing address</span>
+                </label>
+                <p className="font-bold text-[#46A358] cursor-pointer">Add</p>
               </div>
             </div>
-          </div>
+          </div> */}
+
+          <form
+            id="complex-form"
+            className=" w-full"
+            onSubmit={fetchUsers}
+          >
+            <div class="flex text-start justify-between mb-[30px]">
+              <div>
+                <h3 class="mb-[10px] font-[500] text-[18px]">Billing Address</h3>
+                <p class="font-light">
+                  The following addresses will be used on the checkout page by
+                  default.
+                </p>
+              </div>
+              <p class="font-bold text-[#46A358] cursor-pointer">Add</p>
+            </div>
+            <div className="flex gap-[15px] w-[558px] h-[112px]">
+              <div className="">
+                <div className=" pb-[8px] text-start">
+                  <label className="" title="First name">
+                    First name
+                  </label>
+                </div>
+                <div className="">
+                  <input
+                    placeholder="Type your first name..."
+                    id="complex-form_name"
+                    aria-required="true"
+                    className="border w-[421px] h-[40px] py-[7px] px-[11px]"
+                    type="text"
+                    value={user?.name || ""}
+                    onChange={handleChange}
+                    name="name"
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label className="" title="Last name">
+                    Last name
+                  </label>
+                </div>
+                <div className="">
+                  <input
+                    placeholder="Type your last name..."
+                    id="complex-form_surname"
+                    aria-required="true"
+                    className="border w-[421px] h-[40px] py-[7px] px-[11px]"
+                    type="text"
+                    value={user?.surname || ""}
+                    onChange={handleChange}
+                    name="surname"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-[15px] w-[560px] h-[112px] ">
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label
+                    className="ant-form-item-required"
+                    title="Email address"
+                  >
+                    Country / Region
+                  </label>
+                </div>
+                <div className="ant-form-item-control-input-content">
+                  <input
+                    placeholder="Select your country..."
+                    id="complex-form_email"
+                    aria-required="true"
+                    className="border w-[421px] h-[40px] py-[7px] px-[11px]"
+                    type="text"
+                    value={user?.country || ""}
+                    onChange={handleChange}
+                    name="country"
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label className="" title="Phone Number">
+                    Town / City
+                  </label>
+                </div>
+                <div className="">
+                  <span className="">
+                    <span className="">
+                      <input
+                        placeholder="Select your town..."
+                        id="complex-form_phone_number"
+                        aria-required="true"
+                        className="border w-[421px] h-[40px] py-[7px] px-[11px] rounded"
+                        type="text"
+                        value={user?.town || ""}
+                        onChange={handleChange}
+                        name="town"
+                      />
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-[15px] w-[858px] border h-[112px] ">
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label
+                    className="ant-form-item-required"
+                    title="Email address"
+                  >
+                    Streed Address
+                  </label>
+                </div>
+                <div className="ant-form-item-control-input-content">
+                  <input
+                    placeholder="House number and street name"
+                    id="complex-form_email"
+                    aria-required="true"
+                    className="border w-[421px] h-[40px] py-[7px] px-[11px]"
+                    type="text"
+                    value={user?.street_address || ""}
+                    onChange={handleChange}
+                    name="street_address"
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label className="ant-form-item-required" title="Zip">
+                    Extra address
+                  </label>
+                </div>
+                <div className="">
+                  <span className="">
+                    <span className="">
+                      <input
+                        placeholder="Appartment, suite, unit, etc. (optional)"
+                        id="complex-form_phone_number"
+                        aria-required="true"
+                        className="border w-[421px] h-[40px] py-[7px] px-[11px] rounded"
+                        type="text"
+                        value={user?.zip || ""}
+                        onChange={handleChange}
+                        name="zip"
+                      />
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-[15px] w-[560px] h-[112px] ">
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label className="ant-form-item-required" title="State">
+                    State
+                  </label>
+                </div>
+                <div className="ant-form-item-control-input-content">
+                  <input
+                    placeholder="Select a state..."
+                    id="complex-form_email"
+                    aria-required="true"
+                    className="border w-[421px] h-[40px] py-[7px] px-[11px]"
+                    type="text"
+                    value={user?.state || ""}
+                    onChange={handleChange}
+                    name="state"
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label className="ant-form-item-required" title="Zip">
+                    Zip
+                  </label>
+                </div>
+                <div className="">
+                  <span className="">
+                    <span className="">
+                      <input
+                        placeholder="Appartment, suite, unit, etc. (optional)"
+                        id="complex-form_phone_number"
+                        aria-required="true"
+                        className="border w-[421px] h-[40px] py-[7px] px-[11px] rounded"
+                        type="text"
+                        value={user?.zip || ""}
+                        onChange={handleChange}
+                        name="zip"
+                      />
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-[15px] w-[560px] h-[112px] ">
+              <div className="">
+                <div className="pb-[8px] text-start">
+                  <label
+                    className="ant-form-item-required"
+                    title="Email address"
+                  >
+                    Email address
+                  </label>
+                </div>
+                <div className="ant-form-item-control-input-content">
+                  <input
+                    placeholder="Your email address..."
+                    id="complex-form_email"
+                    aria-required="true"
+                    className="border w-[421px] h-[40px] py-[7px] px-[11px]"
+                    type="text"
+                    value={user?.email || ""}
+                    onChange={handleChange}
+                    name="email"
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <div className="pb-[8px]  text-start">
+                  <label
+                    className="ant-form-item-required"
+                    title="Phone Number"
+                  >
+                    Phone Number
+                  </label>
+                </div>
+                <div className="flex">
+                  <span className="">
+                    <p className="flex">
+                      <span className=" w-[59px] h-[40px] px-[11px] py-[8.2px] bg-[#f9f8f8] rounded-l border ">
+                        +998
+                      </span>
+                      <input
+                        placeholder="Your phone number..."
+                        id="complex-form_phone_number"
+                        aria-required="true"
+                        className="border-r border-y w-[366px] h-[40px] py-[7px] px-[11px] rounded-r"
+                        type="text"
+                        value={user?.phone_number || ""}
+                        onChange={handleChange}
+                        name="phone_number"
+                      />
+                    </p>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="bg-[#46A358] flex rounded-md items-center justify-center gap-1 text-base text-white h-[40px] px-[10px] mt-[15px]"
+            >
+              Save changes
+            </button>
+            <div class="flex text-start  justify-between mt-[30px]">
+              <div>
+                <h3 class="mb-[10px] text-[18px] font-[500]">Shipping Address</h3>
+                <p class="font-light">
+                  You have not set up this type of address yet.
+                </p>
+              </div>
+              <div>
+                <label class="mb-[10px] flex items-center">
+                  <span class="">
+                    <input class="" type="checkbox" />
+                    <span class=""></span>
+                  </span>
+                  <span className="ml-[5px]">Same as billing address</span>
+                </label>
+                <p class="font-bold text-[#46A358] cursor-pointer">Add</p>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

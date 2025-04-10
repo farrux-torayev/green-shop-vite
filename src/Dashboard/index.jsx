@@ -66,6 +66,7 @@ const Dashboard = () => {
     <>
       <div className="max-sm:mx-[10px]">
         <div className="flex my-[62px] gap-[30px]">
+
           <div className="bg-[#FBFBFB] w-[310px] h-fit text-xl p-[15px] max-sm:hidden">
             <h1 className="font-bold text-start">My Account</h1>
             <div className="flex flex-col gap-3 mt-[15px] border-b border-[#46A35880] pb-[35px]">
@@ -246,6 +247,7 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+          
           <form id="complex-form" className="" onSubmit={fetchUsers}>
             <div className="flex gap-[15px] w-[558px] h-[112px]">
               <div className="">

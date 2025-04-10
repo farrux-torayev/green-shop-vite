@@ -6,21 +6,27 @@ const TrackOrder = () => {
   const handleClick = (section) => {
     setActiveSection(section);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+  };
   return (
     <>
       <div className="max-sm:mx-[10px]">
         <div className="flex my-[62px] gap-[30px]">
           <div className="bg-[#FBFBFB] w-[310px] h-fit text-xl p-[15px] max-sm:hidden">
             <h1 className="font-bold text-start">My Account</h1>
+
             <div className="flex flex-col gap-3 mt-[15px] border-b border-[#46A35880] pb-[35px]">
               <div
                 onClick={() => handleClick("accountDetails")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                          ${
-                            activeSection === "accountDetails"
-                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                          }`}
+                                    ${
+                                      activeSection === "accountDetails"
+                                        ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                        : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                    }`}
               >
                 <span
                   role="img"
@@ -40,17 +46,17 @@ const TrackOrder = () => {
                   </svg>
                 </span>
                 <h3 className="font-normal text-base">
-                  <Link to={"/dashboard"}>Account Details</Link>
+                  <Link to="/dashboard">Account Details</Link>
                 </h3>
               </div>
               <div
                 onClick={() => handleClick("myProducts")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                          ${
-                            activeSection === "myProducts"
-                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                          }`}
+                                    ${
+                                      activeSection === "myProducts"
+                                        ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                        : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                    }`}
               >
                 <span
                   role="img"
@@ -76,11 +82,11 @@ const TrackOrder = () => {
               <div
                 onClick={() => handleClick("address")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                          ${
-                            activeSection === "address"
-                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                          }`}
+                                    ${
+                                      activeSection === "address"
+                                        ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                        : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                    }`}
               >
                 <span
                   role="img"
@@ -106,11 +112,11 @@ const TrackOrder = () => {
               <div
                 onClick={() => handleClick("wishlist")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                          ${
-                            activeSection === "wishlist"
-                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                          }`}
+                                    ${
+                                      activeSection === "wishlist"
+                                        ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                        : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                    }`}
               >
                 {" "}
                 <span
@@ -137,11 +143,11 @@ const TrackOrder = () => {
               <div
                 onClick={() => handleClick("trackOrder")}
                 className={`transition flex items-center gap-3 cursor-pointer pl-[5px] w-full h-[40px] 
-                          ${
-                            activeSection === "track order"
-                              ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
-                              : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
-                          }`}
+                                    ${
+                                      activeSection === "track order"
+                                        ? "bg-white border-l-[5px] border-[#46A358] text-[#46A358] font-bold"
+                                        : "hover:bg-white hover:border-l-[5px] hover:border-[#46A358] hover:text-[#46A358] hover:text-bold"
+                                    }`}
               >
                 <span
                   role="img"
@@ -165,7 +171,34 @@ const TrackOrder = () => {
                 </h3>
               </div>
             </div>
+            <div className="flex items-center  gap-3 cursor-pointer pl-[5px] w-full h-[40px] mt-[20px] hover:text-white text-base text-red-400 hover:bg-red-600">
+              <span
+                role="img"
+                aria-label="logout"
+                className="anticon anticon-logout w-[20px]  h-[20px]"
+              >
+                <svg
+                  viewBox="64 64 896 896"
+                  focusable="false"
+                  data-icon="logout"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M868 732h-70.3c-4.8 0-9.3 2.1-12.3 5.8-7 8.5-14.5 16.7-22.4 24.5a353.84 353.84 0 01-112.7 75.9A352.8 352.8 0 01512.4 866c-47.9 0-94.3-9.4-137.9-27.8a353.84 353.84 0 01-112.7-75.9 353.28 353.28 0 01-76-112.5C167.3 606.2 158 559.9 158 512s9.4-94.2 27.8-137.8c17.8-42.1 43.4-80 76-112.5s70.5-58.1 112.7-75.9c43.6-18.4 90-27.8 137.9-27.8 47.9 0 94.3 9.3 137.9 27.8 42.2 17.8 80.1 43.4 112.7 75.9 7.9 7.9 15.3 16.1 22.4 24.5 3 3.7 7.6 5.8 12.3 5.8H868c6.3 0 10.2-7 6.7-12.3C798 160.5 663.8 81.6 511.3 82 271.7 82.6 79.6 277.1 82 516.4 84.4 751.9 276.2 942 512.4 942c152.1 0 285.7-78.8 362.3-197.7 3.4-5.3-.4-12.3-6.7-12.3zm88.9-226.3L815 393.7c-5.3-4.2-13-.4-13 6.3v76H488c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h314v76c0 6.7 7.8 10.5 13 6.3l141.9-112a8 8 0 000-12.6z"></path>
+                </svg>
+              </span>
+
+              <button
+                onClick={handleLogout}
+                className=" hover:bg-red-600  cursor-pointer p-2 rounded"
+              >
+                Logout
+              </button>
+            </div>
           </div>
+
           <div className="w-full h-[417px]">
             <div className="flex flex-col gap-3">
               <div className="mt-[10px]">
