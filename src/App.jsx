@@ -14,6 +14,7 @@ import TrackOrder from "./Dashboard/Track Order";
 import Address from "./Dashboard/Address";
 import Wishlist from "./Dashboard/Wishlist";
 import { ToastContainer } from "react-toastify";
+import ProductCard from "./components/ProductCard";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -45,6 +46,7 @@ function App() {
         <Route path="/dashboard/address" element={<Address />} />
         <Route path="/dashboard/wishlist" element={<Wishlist />} />
         <Route path="/dashboard/card/:id" element={<Card />} />
+        <Route path="/productCard" element={<ProductCard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
